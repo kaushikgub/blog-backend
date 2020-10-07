@@ -12,7 +12,7 @@ class BlogService
 {
     public function getAllData()
     {
-        return Blog::with('user')->get();
+        return Blog::with('user')->orderBy('id', 'desc')->get();
     }
 
     public function getDataByUser()

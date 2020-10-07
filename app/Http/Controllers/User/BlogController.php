@@ -33,7 +33,7 @@ class BlogController extends Controller
 
     public function show($id)
     {
-        //
+        return response()->json($this->blogService->getData($id));
     }
 
 

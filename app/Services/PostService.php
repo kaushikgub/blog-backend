@@ -4,30 +4,30 @@
 namespace App\Services;
 
 
-use App\Models\Blog;
+use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class BlogService
+class PostService
 {
     public function getAllData()
     {
-        return Blog::with('user')->orderBy('id', 'desc')->get();
+        return Post::with('user')->orderBy('id', 'desc')->get();
     }
 
     public function getDataByUser()
     {
-        return Blog::where('user_id', Auth::id())->get();
+        return Post::where('user_id', Auth::id())->get();
     }
 
     public function getData($id)
     {
-        return Blog::with('user')->findOrFail($id);
+        return Post::with('user')->findOrFail($id);
     }
 
     public function deleteData($id)
     {
-        Blog::findOrFail($id)->delete();
+        Post::findOrFail($id)->delete();
         return 'Deleted';
     }
 
@@ -35,15 +35,14 @@ class BlogService
     {
         $data = $request->except('id');
         $data['user_id'] = Auth::id();
-        $data['status'] = 'Pending';
-        Blog::create($data);
+        Post::create($data);
         return 'Created';
     }
 
     public function update(Request $request, $id)
     {
         $data = $request->except('id');
-        Blog::findOrFail($id)->update($data);
+        Post::findOrFail($id)->update($data);
         return 'Updated';
     }
 }

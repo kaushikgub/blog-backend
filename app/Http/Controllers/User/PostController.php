@@ -3,14 +3,15 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
-use App\Services\BlogService;
+use App\Http\Requests\PostRequest;
+use App\Services\PostService;
 use Illuminate\Http\Request;
 
-class BlogController extends Controller
+class PostController extends Controller
 {
     private $blogService;
 
-    public function __construct(BlogService $blogService)
+    public function __construct(PostService $blogService)
     {
         $this->middleware('auth:sanctum');
         $this->blogService = $blogService;
@@ -26,7 +27,7 @@ class BlogController extends Controller
         //
     }
 
-    public function store(Request $request)
+    public function store(PostRequest $request)
     {
         return response()->json($this->blogService->create($request));
     }

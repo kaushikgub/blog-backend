@@ -22,7 +22,7 @@ class PostService
 
     public function getData($id)
     {
-        return Post::with('user')->findOrFail($id);
+        return Post::with('user.posts')->findOrFail($id);
     }
 
     public function deleteData($id)

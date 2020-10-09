@@ -10,19 +10,24 @@ use Illuminate\Support\Facades\Auth;
 
 class PostService
 {
-    public function getAllData()
-    {
-        return Post::with('user')->orderBy('id', 'desc')->get();
-    }
-
-    public function getDataByUser()
-    {
-        return Post::where('user_id', Auth::id())->get();
-    }
-
     public function getData($id)
     {
+        return Post::findOrFail($id);
+    }
+
+    public function getAllData()
+    {
+        return Post::with('user')->orderBy('id', 'desc')->paginate(5);
+    }
+
+    public function getDataWithRelatedPost($id)
+    {
         return Post::with('user.posts')->findOrFail($id);
+    }
+
+    public function getRecentPosts()
+    {
+        return Post::orderBy('id', 'desc')->take(10)->get();
     }
 
     public function deleteData($id)

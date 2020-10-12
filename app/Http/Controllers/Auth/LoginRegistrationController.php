@@ -22,7 +22,7 @@ class LoginRegistrationController extends Controller
             'password' => 'required|min:3'
         ]);
         if (Auth::attempt($request->only('email', 'password'), true)){
-            return response()->json('Authenticate');
+            return response()->json(Auth::user());
         }
         return response()->json('Unauthenticated');
     }

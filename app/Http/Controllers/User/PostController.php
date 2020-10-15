@@ -13,7 +13,9 @@ class PostController extends Controller
 
     public function __construct(PostService $postService)
     {
-        $this->middleware('auth:sanctum');
+        $this->middleware('auth:sanctum', ['except' => [
+            'index', 'recentPosts', 'show'
+        ]]);
         $this->postService = $postService;
     }
 

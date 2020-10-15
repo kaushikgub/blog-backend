@@ -17,9 +17,9 @@ class PostController extends Controller
         $this->postService = $postService;
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        return response()->json($this->postService->getAllData());
+        return response()->json($this->postService->getAllData($request));
     }
 
     public function create()

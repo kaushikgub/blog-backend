@@ -15,9 +15,16 @@ class PostService
         return Post::findOrFail($id);
     }
 
-    public function getAllData()
+    public function getAllData(Request $request)
     {
-        return Post::with('user')->orderBy('id', 'desc')->paginate(5);
+        $posts = Post::query();
+        if ($request->get('search')){
+            $posts->where('title',  'like', '%' . $request->get('search') . '%');
+            $posts->orWhereHas('user', function ($query) use ($request){
+                $query->where('name',  'like', '%' . $request->get('search') . '%');
+            });
+        }
+        return $posts->with('user')->orderBy('id', 'desc')->paginate(5);
     }
 
     public function getDataWithRelatedPost($id)

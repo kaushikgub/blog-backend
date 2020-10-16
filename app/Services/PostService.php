@@ -24,7 +24,7 @@ class PostService
                 $query->where('name',  'like', '%' . $request->get('search') . '%');
             });
         }
-        return $posts->with('user')->orderBy('id', 'desc')->paginate(5);
+        return $posts->with('user')->where('status', 'Publish')->orderBy('id', 'desc')->paginate(5);
     }
 
     public function getDataWithRelatedPost($id)
@@ -45,7 +45,7 @@ class PostService
 
     public function create(Request $request)
     {
-        $data = $request->except('id');
+        $data = $request->only('title', 'content', 'status');
         $data['user_id'] = Auth::id();
         Post::create($data);
         return 'Created';
@@ -53,7 +53,7 @@ class PostService
 
     public function update(Request $request, $id)
     {
-        $data = $request->except('id');
+        $data = $request->only('title', 'content', 'status');
         Post::findOrFail($id)->update($data);
         return 'Updated';
     }

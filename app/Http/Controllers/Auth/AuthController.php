@@ -15,23 +15,19 @@ use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
-    public function users()
-    {
-        return response()->json(User::all());
-    }
-
     public function login(LoginRequest $request)
     {
-        if (Auth::attempt(
-            [
-                'email' => $request->get('email'),
-                'password' => $request->get('password'),
-                'is_verified' => true
-            ]
-            , true)) {
-            return response()->json(Auth::user());
+        $user = User::where('email', $request->get('email'))->first();
+
+        if (! $user || ! Hash::check($request->get('password'), $user->password)) {
+            return response([
+                'message' => 'The provided credentials are incorrect.'
+            ]);
         }
-        return response()->json('Unauthenticated');
+        return response([
+            'token' => $user->createToken('token')->plainTextToken,
+            'userId' => $user['id']
+        ]);
     }
 
     public function registration(UserRequest $request)
@@ -46,9 +42,10 @@ class AuthController extends Controller
         return response()->json('Registered Successful');
     }
 
-    public function logout()
+    public function logout(Request $request)
     {
-        Auth::logout();
+        $user = $request->user();
+        $user->tokens()->where('id', $user->currentAccessToken()->id)->delete();
         return response()->json('Log Out');
     }
 }

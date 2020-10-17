@@ -8,7 +8,7 @@ use App\Http\Controllers\Auth\VerifyController;
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/registration', [AuthController::class, 'registration']);
-Route::get('/logout', [AuthController::class, 'logout']);
+Route::get('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 
 Route::post('/forgot/password', [VerifyController::class, 'forgotPassword']);
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ChangePassword;
 use App\Models\User;
 use App\Notifications\ForgotPassword;
 use Illuminate\Http\Request;
@@ -18,7 +19,7 @@ class VerifyController extends Controller
             'is_verified' => true,
             'token' => Str::random(10)
         ]);
-        return 'Email Verification Successful';
+        return redirect('https://peaceful-dusk-18159.herokuapp.com/login');
     }
 
     public function forgotPassword(Request $request)
@@ -42,26 +43,13 @@ class VerifyController extends Controller
         }
     }
 
-    public function changePassword($id, $token)
+    public function change(ChangePassword $request)
     {
-        return view('auth.password-change', with([
-            'id' => $id,
-            'token' => $token
-        ]));
-    }
-
-    public function change(Request $request)
-    {
-        $request->validate([
-            'id' => 'required|numeric',
-            'token' => 'required',
-            'password' => 'required|confirmed|min:3'
-        ]);
         $data = $request->only('id', 'token');
         User::where($data)->update([
             'password' => Hash::make($request->get('password')),
             'token' => Str::random(10)
         ]);
-        return redirect('http://localhost:3000/login');
+        return response()->json('Password Changed');
     }
 }

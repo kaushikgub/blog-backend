@@ -38,7 +38,7 @@ class AccountCreated extends Notification implements ShouldQueue
         return (new MailMessage)
             ->greeting('Hello!')
             ->line('An account has been created for you. Click the Active button to activate the account.')
-            ->action('Active', url('/email/verify'). '/' . $this->user['id'] . '/' . $this->user['token'])
+            ->action('Active', url('/api/email/verify'). '/' . $this->user['id'] . '/' . $this->user['token'])
             ->line('Thank you for using FLY!');
     }
 

@@ -30,7 +30,8 @@ class ForgotPassword extends Notification implements ShouldQueue
     {
         return (new MailMessage)
             ->line('Please click this button to reset your password.')
-            ->action('Reset', url('/password/reset') . '/' . $this->userId . '/' . $this->token)
+            ->action('Reset', 'https://peaceful-dusk-18159.herokuapp.com/password/reset/' . $this->userId . '/' . $this->token)
+//            ->action('Reset', 'http://localhost:3000/password/reset/' . $this->userId . '/' . $this->token)
             ->line('Thank you for using FLY!');
     }
 

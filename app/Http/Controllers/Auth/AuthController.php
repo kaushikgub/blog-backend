@@ -17,7 +17,7 @@ class AuthController extends Controller
 {
     public function login(LoginRequest $request)
     {
-        $user = User::where('email', $request->get('email'))->first();
+        $user = User::where('email', $request->get('email'))->where('is_verified', true)->first();
 
         if (! $user || ! Hash::check($request->get('password'), $user->password)) {
             return response([

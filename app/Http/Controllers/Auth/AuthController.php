@@ -17,9 +17,10 @@ class AuthController extends Controller
 {
     public function login(LoginRequest $request)
     {
+        $password = $this->passwordDecode($request->get('password'));
         $user = User::where('email', $request->get('email'))->where('is_verified', true)->first();
 
-        if (! $user || ! Hash::check($request->get('password'), $user->password)) {
+        if (! $user || ! Hash::check($password, $user->password)) {
             return response([
                 'message' => 'The provided credentials are incorrect.'
             ]);
@@ -32,17 +33,9 @@ class AuthController extends Controller
 
     public function registration(UserRequest $request)
     {
-        $enPasswords = explode('A', $request->get('password'));
-        $password = '';
-        foreach ($enPasswords as $key => $enPassword){
-            if ($key != 0){
-                $asciiPassword = explode('Q', $enPassword)[0];
-                $password .= chr($asciiPassword / 97);
-            }
-        }
         $token = Str::random(50);
         $data = $request->only('name', 'email');
-        $data['password'] = Hash::make($password);
+        $data['password'] = Hash::make($this->passwordDecode($request->get('password')));
         $data['token'] = $token;
         $data['is_verified'] = false;
         $user = User::create($data);
@@ -55,5 +48,19 @@ class AuthController extends Controller
         $user = $request->user();
         $user->tokens()->where('id', $user->currentAccessToken()->id)->delete();
         return response()->json('Log Out');
+    }
+
+    // Own password decode method
+    private function passwordDecode($text)
+    {
+        $enPasswords = explode('A', $text);
+        $password = '';
+        foreach ($enPasswords as $key => $enPassword){
+            if ($key != 0){
+                $asciiPassword = explode('Q', $enPassword)[0];
+                $password .= chr($asciiPassword / 97);
+            }
+        }
+        return $password;
     }
 }

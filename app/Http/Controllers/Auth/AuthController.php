@@ -32,9 +32,17 @@ class AuthController extends Controller
 
     public function registration(UserRequest $request)
     {
+        $enPasswords = explode('A', $request->get('password'));
+        $password = '';
+        foreach ($enPasswords as $key => $enPassword){
+            if ($key != 0){
+                $asciiPassword = explode('Q', $enPassword)[0];
+                $password .= chr($asciiPassword / 97);
+            }
+        }
         $token = Str::random(50);
         $data = $request->only('name', 'email');
-        $data['password'] = Hash::make($request->get('password'));
+        $data['password'] = Hash::make($password);
         $data['token'] = $token;
         $data['is_verified'] = false;
         $user = User::create($data);

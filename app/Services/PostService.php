@@ -29,7 +29,7 @@ class PostService
 
     public function getDataWithRelatedPost($id)
     {
-        return Post::with('user.posts')->findOrFail($id);
+        return Post::with('user.posts', 'comments')->findOrFail($id);
     }
 
     public function getRecentPosts()

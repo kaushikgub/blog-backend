@@ -18,8 +18,8 @@ class AuthController extends Controller
     public function login(LoginRequest $request)
     {
         $password = $this->passwordDecode($request->get('password'));
+        $password = $request->get('password');
         $user = User::where('email', $request->get('email'))->where('is_verified', true)->first();
-
         if (! $user || ! Hash::check($password, $user->password)) {
             return response([
                 'message' => 'The provided credentials are incorrect.'
